@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('schedule_blocks', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->foreignUuid('field_id')->constrained('fields')->cascadeOnDelete();
             $table->date('block_date');
             $table->time('start_time');
