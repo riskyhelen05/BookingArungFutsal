@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Auth;
 
 // Redirect root ke login
 Route::get('/', fn() => redirect()->route('login'));
@@ -27,4 +28,25 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
     });
+
+
+
+// Route debug sementara - taruh paling atas
+Route::get('/debug-login', function () {
+    return [
+        'auth'  => Auth::check(),
+        'user'  => Auth::user(),
+        'role'  => Auth::user()?->role,
+    ];
+})->middleware('auth');
+
+
+
+
+
+
+
+
+
+
 });
