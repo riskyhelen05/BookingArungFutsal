@@ -3,14 +3,13 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->uuid('id')->primary();
             $table->string('reservation_code', 20)->unique();
             $table->foreignUuid('user_id')->constrained('users');
             $table->foreignUuid('field_id')->constrained('fields');
@@ -29,7 +28,6 @@ return new class extends Migration
             ])->default('pending');
             $table->timestamps();
 
-            // Prevent double booking at DB level
             $table->unique(['field_id', 'booking_date', 'start_time'], 'unique_booking_slot');
         });
     }
