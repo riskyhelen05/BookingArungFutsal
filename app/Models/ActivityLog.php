@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityLog extends Model
 {
@@ -34,4 +35,24 @@ class ActivityLog extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+  
+
+ public static function record(
+        string  $action,
+        string  $description,
+        ?string $subjectType = null,
+        ?string $subjectId   = null,
+    ): void {
+        self::create([
+            'user_id'      => Auth::id(),
+            'role'         => Auth::user()?->role,
+            'action'       => $action,
+            'description'  => $description,
+            'subject_type' => $subjectType,
+            'subject_id'   => $subjectId,
+            'ip_address'   => request()->ip(),
+            'user_agent'   => request()->userAgent(),
+        ]);
+}
 }
