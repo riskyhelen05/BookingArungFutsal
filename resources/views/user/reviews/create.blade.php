@@ -1,53 +1,119 @@
 @extends('layouts.user')
 
-@section('title', 'Berikan Ulasan')
+@section('title', 'Ulasan Pesanan')
 
 @section('content')
 
-<div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
+<div class="max-w-xl mx-auto">
 
-    <h2 class="text-xl font-bold mb-4">
-        Berikan Ulasan ⭐
-    </h2>
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
 
-    <form method="POST"
-          action="{{ route('user.review.store', $booking) }}">
-        @csrf
+        <div class="bg-[#12B5A5] text-white text-center py-4">
 
-        <label class="block mb-2">
-            Rating
-        </label>
+            <p class="text-xs">
+                ULASAN PESANAN
+            </p>
 
-        <select
-            name="rating"
-            class="w-full border rounded-lg p-2 mb-4">
+            <p class="text-sm">
+                {{ $booking->reservation_code }}
+            </p>
 
-            <option value="5">⭐⭐⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="3">⭐⭐⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="1">⭐</option>
+        </div>
 
-        </select>
+        <div class="p-6">
 
-        <label class="block mb-2">
-            Komentar
-        </label>
+            <h2 class="text-center text-xl font-semibold mb-6">
+                LAPANGAN ARUNG FUTSAL
+            </h2>
 
-        <textarea
-            name="comment"
-            rows="4"
-            class="w-full border rounded-lg p-2"></textarea>
+            <form
+                action="{{ route('user.review.store', $booking) }}"
+                method="POST">
 
-        <button
-            type="submit"
-            class="mt-4 bg-[#12B5A5] text-white px-5 py-2 rounded-lg">
+                @csrf
 
-            Kirim Ulasan
-        </button>
+                <input
+                    type="hidden"
+                    name="rating"
+                    id="rating"
+                    value="0">
 
-    </form>
+                <div class="flex justify-center gap-2 mb-6">
+
+                    @for($i=1; $i<=5; $i++)
+
+                    <button
+                        type="button"
+                        class="star text-5xl text-gray-300"
+                        data-value="{{ $i }}">
+                        ★
+                    </button>
+
+                    @endfor
+
+                </div>
+
+                <textarea
+                    name="comment"
+                    rows="4"
+                    placeholder="Berikan ulasan anda..."
+                    class="w-full bg-gray-100 rounded-xl p-4 mb-5"></textarea>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                    <a
+                        href="{{ route('user.booking.history') }}"
+                        class="text-center py-3 bg-gray-100 rounded-xl">
+                        Batal
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="bg-[#12B5A5] text-white rounded-xl">
+                        Kirim Ulasan
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
 
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+
+const stars = document.querySelectorAll('.star');
+const ratingInput = document.getElementById('rating');
+
+stars.forEach(star => {
+
+    star.addEventListener('click', function() {
+
+        const value = this.dataset.value;
+
+        ratingInput.value = value;
+
+        stars.forEach((s,index) => {
+
+            if(index < value){
+                s.classList.remove('text-gray-300');
+                s.classList.add('text-yellow-400');
+            } else {
+                s.classList.remove('text-yellow-400');
+                s.classList.add('text-gray-300');
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+@endpush

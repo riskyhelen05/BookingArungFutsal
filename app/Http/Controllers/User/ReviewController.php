@@ -11,26 +11,43 @@ use Illuminate\Support\Facades\Auth;
 class ReviewController extends Controller
 {
     public function create(Booking $booking)
-    {
-        return view('user.reviews.create', compact('booking'));
+{
+    abort_if($booking->user_id !== Auth::id(), 403);
+
+    if ($booking->status !== 'completed') {
+        return redirect()
+            ->route('user.booking.history');
     }
 
-    public function store(Request $request, Booking $booking)
-    {
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|max:1000',
-        ]);
+    $alreadyReview = Review::where('booking_id', $booking->id)
+        ->where('user_id', Auth::id())
+        ->exists();
 
-        Review::create([
-            'user_id' => Auth::id(),
-            'booking_id' => $booking->id,
-            'rating' => $request->rating,
-            'comment' => $request->comment,
-        ]);
-
+    if ($alreadyReview) {
         return redirect()
             ->route('user.booking.history')
-            ->with('success', 'Ulasan berhasil dikirim');
+            ->with('error', 'Anda sudah memberikan ulasan.');
     }
+
+    return view('user.reviews.create', compact('booking'));
+}
+
+public function store(Request $request, Booking $booking)
+{
+    abort_if($booking->user_id !== Auth::id(), 403);
+
+    $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'comment' => 'nullable|string|max:1000',
+    ]);
+
+    Review::create([
+        'user_id' => Auth::id(),
+        'booking_id' => $booking->id,
+        'rating' => $request->rating,
+        'comment' => $request->comment,
+    ]);
+
+    return view('user.reviews.success');
+}
 }
