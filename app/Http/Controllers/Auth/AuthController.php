@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Notification;
 
 class AuthController extends Controller
 {
@@ -30,46 +31,41 @@ class AuthController extends Controller
     // ==================
     // Login
     // ==================
-    public function login(Request $request)
-    {
-        $request->validate([
-            'login'    => 'required|string',
-            'password' => 'required|string',
-        ], [
-            'login.required'    => 'Email atau username wajib diisi.',
-            'password.required' => 'Password wajib diisi.',
+public function login(Request $request)
+{
+    $request->validate([
+        'login'    => 'required|string',
+        'password' => 'required|string',
+    ]);
+
+    $field = filter_var($request->login, FILTER_VALIDATE_EMAIL)
+        ? 'email'
+        : 'username';
+
+    $credentials = [
+        $field     => $request->login,
+        'password' => $request->password,
+    ];
+
+    if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+    return back()
+        ->withInput($request->only('login', 'remember'))
+        ->withErrors([
+            'login' => 'Email/username atau password salah.'
         ]);
+}
 
-        // Cek apakah input berupa email atau username
-        $field = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+$request->session()->regenerate();
 
-        $credentials = [
-            $field     => $request->login,
-            'password' => $request->password,
-        ];
+$user = Auth::user();
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()
-                ->withInput($request->only('login', 'remember'))
-                ->withErrors(['login' => 'Email/username atau password salah.']);
-        }
+// ActivityLog sementara jangan dulu
 
-        $request->session()->regenerate();
-
-        $user = Auth::user();
-
-        // Catat activity log
-        ActivityLog::record(
-            action: 'auth.login',
-            description: $user->name . ' berhasil login',
-        );
-
-        // Redirect berdasarkan role
-        return match($user->role) {
-            'admin' => redirect()->route('admin.dashboard'),
-            default => redirect()->route('user.beranda'),
-        };
-    }
+return match($user->role) {
+    'admin' => redirect()->route('admin.dashboard'),
+    default => redirect()->route('user.beranda'),
+};
+}
 
     // ==================
     // Register (role user saja)
@@ -118,6 +114,25 @@ class AuthController extends Controller
         return redirect()->route('user.beranda')
             ->with('success', 'Selamat datang, ' . $user->name . '!');
     }
+
+    public function beranda()
+{
+    $user = auth()->user();
+
+    $notifications = Notification::where('user_id', $user->id)
+        ->latest('created_at')
+        ->limit(5)
+        ->get();
+
+    $unreadCount = Notification::where('user_id', $user->id)
+        ->where('is_read', false)
+        ->count();
+
+    view()->share('notifications', $notifications);
+    view()->share('unreadCount', $unreadCount);
+
+    return view('user.beranda', compact('notifications', 'unreadCount'));
+}
 
     // ==================
     // Logout

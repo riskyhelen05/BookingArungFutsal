@@ -1,148 +1,160 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+@extends('layouts.user')
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+@section('title', 'Beranda')
 
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            text-align: center;
-        }
+@section('content')
 
-        .avatar {
-            width: 72px;
-            height: 72px;
-            background: #4f46e5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: white;
-            margin: 0 auto 20px;
-        }
+@php
+    $nextBooking = \App\Models\Booking::where('user_id', Auth::id())
+        ->whereIn('status', [
+            'confirmed',
+            'pending',
+            'waiting_confirmation'
+        ])
+        ->with('field')
+        ->latest()
+        ->first();
+@endphp
 
-        h1 {
-            font-size: 22px;
-            color: #1e1e2e;
-            margin-bottom: 6px;
-        }
+<div class="space-y-5">
 
-        .role-badge {
-            display: inline-block;
-            background: #ede9fe;
-            color: #4f46e5;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 3px 12px;
-            border-radius: 99px;
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+    {{-- Header --}}
+    <div class="bg-[#12B5A5] text-white rounded-b-[32px] px-6 pt-8 pb-8">
 
-        .info-box {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 24px;
-            text-align: left;
-        }
+        <h1 class="text-2xl font-bold">
+            Halo, {{ Auth::user()->name }}!
+        </h1>
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            padding: 6px 0;
-            border-bottom: 1px solid #eee;
-            color: #555;
-        }
+        <p class="mt-1 text-sm text-teal-100">
+            Siap main futsal hari ini?
+        </p>
 
-        .info-row:last-child { border-bottom: none; }
-        .info-row span:first-child { color: #999; }
-        .info-row span:last-child { font-weight: 500; color: #222; }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border-radius: 8px;
-            padding: 10px 16px;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .btn-logout {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-logout:hover { background: #dc2626; }
-    </style>
-</head>
-<body>
-
-<div class="card">
-
-    {{-- Flash success (dari register / login) --}}
-    @if (session('success'))
-        <div class="alert-success">✅ {{ session('success') }}</div>
-    @endif
-
-    <div class="avatar">
-        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
     </div>
 
-    <h1>Halo, {{ Auth::user()->name }}!</h1>
+    <div class="px-4 space-y-5">
 
-    <div class="role-badge">{{ Auth::user()->role }}</div>
+        {{-- Informasi Lapangan --}}
+        <div class="bg-white rounded-2xl shadow-sm p-4">
 
-    <div class="info-box">
-        <div class="info-row">
-            <span>Username</span>
-            <span>{{ Auth::user()->username }}</span>
+            <div class="flex gap-4">
+
+                <img
+                    src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400"
+                    alt="Lapangan Futsal"
+                    class="w-28 h-28 rounded-xl object-cover flex-shrink-0"
+                >
+
+                <div class="flex-1">
+
+                    <h2 class="font-semibold text-lg text-gray-800">
+                        Lapangan Arung Futsal
+                    </h2>
+
+                    <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                        JL. IKIP C10A, Gunung Anyar,
+                        Surabaya, Jawa Timur
+                    </p>
+
+                    <hr class="my-3">
+
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Fasilitas:
+                        Area parkir, air minum,
+                        mushola, kamar mandi.
+                    </p>
+
+                    <a
+                        href="#"
+                        class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-[#12B5A5] text-white text-sm font-medium hover:bg-[#0fa293] transition"
+                    >
+                        Booking Sekarang
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
-        <div class="info-row">
-            <span>Email</span>
-            <span>{{ Auth::user()->email }}</span>
+
+        {{-- Booking Mendatang --}}
+        <div>
+
+            <div class="flex items-center justify-between mb-3">
+
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Booking Mendatang
+                </h2>
+
+                <a
+                    href="{{ route('user.booking.history') }}"
+                    class="text-sm font-medium text-[#12B5A5]"
+                >
+                    Lihat Semua
+                </a>
+
+            </div>
+
+            @if($nextBooking)
+
+                <div class="bg-white rounded-2xl shadow-sm p-4">
+
+                    <div class="flex items-start justify-between">
+
+                        <div>
+
+                            <h3 class="font-semibold text-gray-800">
+                                {{ $nextBooking->field->name }}
+                            </h3>
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                {{ \Carbon\Carbon::parse($nextBooking->booking_date)->translatedFormat('d F Y') }}
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+                                {{ \Carbon\Carbon::parse($nextBooking->start_time)->format('H:i') }}
+                                -
+                                {{ \Carbon\Carbon::parse($nextBooking->end_time)->format('H:i') }}
+                            </p>
+
+                        </div>
+
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                            Dikonfirmasi
+                        </span>
+
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t">
+
+                        <p class="text-xs text-gray-500">
+                            Total Bayar
+                        </p>
+
+                        <p class="text-xl font-bold text-[#12B5A5]">
+                            Rp {{ number_format($nextBooking->total_amount, 0, ',', '.') }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            @else
+
+                <div class="bg-white rounded-2xl shadow-sm p-6 text-center">
+
+                    <p class="text-gray-500">
+                        Belum ada booking aktif.
+                    </p>
+
+                </div>
+
+            @endif
+
         </div>
-        <div class="info-row">
-            <span>No. HP</span>
-            <span>{{ Auth::user()->phone }}</span>
-        </div>
+
     </div>
-
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="btn-logout">Logout</button>
-    </form>
 
 </div>
 
-</body>
-</html>
+@endsection
