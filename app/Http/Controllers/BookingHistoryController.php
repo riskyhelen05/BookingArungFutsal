@@ -20,7 +20,11 @@ class BookingHistoryController extends Controller
         ->latest()
         ->get();
 
-    $historyBookings = Booking::with(['field', 'payment'])
+    $historyBookings = Booking::with([
+    'field',
+    'payment',
+    'review'
+])
         ->whereIn('status', [
             'completed',
             'cancelled'
@@ -58,16 +62,24 @@ class BookingHistoryController extends Controller
         return view('user.bookings.cancel', compact('booking'));
     }
 
-    public function cancel(Request $request, Booking $booking)
-    {
-        abort_if($booking->user_id !== Auth::id(), 403);
+public function cancel(Request $request, Booking $booking)
+{
+    abort_if($booking->user_id !== Auth::id(), 403);
 
-        $booking->update([
-            'status' => 'cancelled'
-        ]);
+    $booking->update([
+        'status' => 'cancelled'
+    ]);
 
-        return redirect()
-            ->route('user.booking.history')
-            ->with('success', 'Booking berhasil dibatalkan.');
-    }
+    return redirect()->route(
+        'user.booking.cancel.success',
+        $booking
+    );
+}
+
+public function cancelSuccess(Booking $booking)
+{
+    abort_if($booking->user_id !== Auth::id(), 403);
+
+    return view('user.bookings.cancel-success', compact('booking'));
+}
 }

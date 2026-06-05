@@ -7,6 +7,7 @@ use App\Http\Controllers\BookingHistoryController;
 use App\Models\Notification;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ReviewController;
+use App\Models\Booking;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,9 @@ Route::middleware('auth')->group(function () {
 
             Route::post('/booking-history/{booking}/cancel', [BookingHistoryController::class, 'cancel'])
                 ->name('booking.cancel');
+
+            Route::get('/booking-history/{booking}/cancel-success', [BookingHistoryController::class, 'cancelSuccess'])
+                ->name('booking.cancel.success');
 
 
 /*
