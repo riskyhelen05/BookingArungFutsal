@@ -41,12 +41,13 @@ public function store(Request $request, Booking $booking)
         'comment' => 'nullable|string|max:1000',
     ]);
 
-    Review::create([
-        'user_id' => Auth::id(),
-        'booking_id' => $booking->id,
-        'rating' => $request->rating,
-        'comment' => $request->comment,
-    ]);
+  Review::create([
+    'user_id' => Auth::id(),
+    'booking_id' => $booking->id,
+    'field_id' => $booking->field_id,
+    'rating' => $request->rating,
+    'review' => $request->comment,
+]);
 
     return view('user.reviews.success');
 }

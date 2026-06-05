@@ -10,11 +10,12 @@ class Review extends Model
     use HasUuids;
 
     protected $fillable = [
-        'user_id',
-        'booking_id',
-        'rating',
-        'comment',
-    ];
+    'booking_id',
+    'user_id',
+    'field_id',
+    'rating',
+    'review',
+];
 
     public function user()
     {
