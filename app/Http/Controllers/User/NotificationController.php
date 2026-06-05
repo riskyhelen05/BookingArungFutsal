@@ -26,7 +26,22 @@ class NotificationController extends Controller
                     'title' => $n->title,
                     'message' => $n->message,
                     'is_read' => $n->is_read,
-                    'url' => route('user.notifications.show', $n->id),
+                    'url' => match ($n->type) {
+
+                    'booking_success'
+                        => route('user.booking.show', $n->booking_id),
+
+                    'booking_cancelled'
+                        => route('user.booking.show', $n->booking_id),
+
+                    'booking_reminder'
+                        => route('user.booking.show', $n->booking_id),
+
+                    'review_request'
+                        => route('user.review.create', $n->booking_id),
+
+                    default => '#'
+                    }
                 ];
             }),
         ]);

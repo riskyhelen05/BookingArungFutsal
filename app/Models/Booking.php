@@ -51,19 +51,61 @@ class Booking extends Model
         return $this->hasMany(Notification::class, 'booking_id');
     }
 
+    public function review()
+    {
+    return $this->hasOne(Review::class);
+    }
+
     protected static function booted()
 {
+    // BOOKING BERHASIL
     static::created(function ($booking) {
 
         Notification::create([
             'user_id' => $booking->user_id,
             'title' => 'Booking Berhasil 🎉',
-            'message' => 'Lapangan berhasil kamu booking untuk tanggal ' . $booking->booking_date,
+            'message' => 'Booking lapangan berhasil untuk tanggal '
+                . $booking->booking_date->format('d M Y'),
             'type' => 'booking_success',
             'booking_id' => $booking->id,
             'is_read' => false
         ]);
 
     });
+
+    // BOOKING DIBATALKAN
+    static::updated(function ($booking) {
+
+        if ($booking->isDirty('status')
+            && $booking->status === 'cancelled') {
+
+            Notification::create([
+                'user_id' => $booking->user_id,
+                'title' => 'Booking Dibatalkan ❌',
+                'message' => 'Booking tanggal '
+                    . $booking->booking_date->format('d M Y')
+                    . ' telah dibatalkan.',
+                'type' => 'booking_cancelled',
+                'booking_id' => $booking->id,
+                'is_read' => false
+            ]);
+        }
+
+            // MINTA ULASAN
+        if ($booking->isDirty('status')
+            && $booking->status === 'completed') {
+
+            Notification::create([
+                'user_id' => $booking->user_id,
+                'title' => 'Berikan Ulasan ⭐',
+                'message' => 'Terima kasih telah bermain. Yuk berikan ulasan untuk pengalamanmu.',
+                'type' => 'review_request',
+                'booking_id' => $booking->id,
+                'is_read' => false
+            ]);
+        }
+
+    });
+
 }
 }

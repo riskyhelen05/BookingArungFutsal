@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BookingHistoryController;
 use App\Models\Notification;
 use App\Http\Controllers\User\NotificationController;
+use App\Http\Controllers\User\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +93,16 @@ Route::get('/notifications/{id}', [NotificationController::class, 'show'])
 */
 Route::post('/notifications/read/{id}', [NotificationController::class, 'read'])
     ->name('notifications.read');
+
+Route::get(
+    '/booking-history/{booking}/review',
+    [ReviewController::class, 'create']
+)->name('review.create');
+
+Route::post(
+    '/booking-history/{booking}/review',
+    [ReviewController::class, 'store']
+)->name('review.store');
     
 });
     /*
