@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Notification;
 
 class Booking extends Model
 {
@@ -49,4 +50,20 @@ class Booking extends Model
     {
         return $this->hasMany(Notification::class, 'booking_id');
     }
+
+    protected static function booted()
+{
+    static::created(function ($booking) {
+
+        Notification::create([
+            'user_id' => $booking->user_id,
+            'title' => 'Booking Berhasil 🎉',
+            'message' => 'Lapangan berhasil kamu booking untuk tanggal ' . $booking->booking_date,
+            'type' => 'booking_success',
+            'booking_id' => $booking->id,
+            'is_read' => false
+        ]);
+
+    });
+}
 }
