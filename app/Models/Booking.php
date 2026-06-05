@@ -22,6 +22,7 @@ class Booking extends Model
         'price_per_hour',
         'total_amount',
         'status',
+        'cancel_reason',
     ];
 
     protected function casts(): array
