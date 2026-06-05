@@ -5,15 +5,36 @@
 @section('content')
 
 @php
-    $nextBooking = \App\Models\Booking::where('user_id', Auth::id())
-        ->whereIn('status', [
-            'confirmed',
-            'pending',
-            'waiting_confirmation'
-        ])
-        ->with('field')
-        ->latest()
-        ->first();
+
+$nextBooking = \App\Models\Booking::where('user_id', Auth::id())
+    ->whereIn('status', [
+        'confirmed',
+        'pending',
+        'waiting_confirmation'
+    ])
+    ->with('field')
+    ->latest()
+    ->first();
+
+$statusColor = 'bg-gray-100 text-gray-700';
+$statusText = '-';
+
+if ($nextBooking) {
+    $statusColor = match($nextBooking->status) {
+        'confirmed' => 'bg-green-100 text-green-700',
+        'pending' => 'bg-yellow-100 text-yellow-700',
+        'waiting_confirmation' => 'bg-blue-100 text-blue-700',
+        default => 'bg-gray-100 text-gray-700'
+    };
+
+    $statusText = match($nextBooking->status) {
+        'confirmed' => 'Dikonfirmasi',
+        'pending' => 'Menunggu Pembayaran',
+        'waiting_confirmation' => 'Menunggu Konfirmasi',
+        default => ucfirst($nextBooking->status)
+    };
+}
+
 @endphp
 
 <div class="space-y-5">
@@ -33,16 +54,42 @@
 
     <div class="px-4 space-y-5">
 
+    {{-- Statistik --}}
+    <div class="grid grid-cols-3 gap-3">
+
+    <div class="bg-white rounded-xl p-3 text-center">
+        <p class="text-xs text-gray-500">Booking</p>
+        <p class="text-xl font-bold text-[#12B5A5]">
+            {{ \App\Models\Booking::where('user_id', Auth::id())->count() }}
+        </p>
+    </div>
+
+    <div class="bg-white rounded-xl p-3 text-center">
+        <p class="text-xs text-gray-500">Aktif</p>
+        <p class="text-xl font-bold text-green-600">
+            {{ \App\Models\Booking::where('user_id', Auth::id())->whereIn('status',['pending','confirmed'])->count() }}
+        </p>
+    </div>
+
+    <div class="bg-white rounded-xl p-3 text-center">
+        <p class="text-xs text-gray-500">Selesai</p>
+        <p class="text-xl font-bold text-blue-600">
+            {{ \App\Models\Booking::where('user_id', Auth::id())->where('status','completed')->count() }}
+        </p>
+    </div>
+
+</div>
+
         {{-- Informasi Lapangan --}}
         <div class="bg-white rounded-2xl shadow-sm p-4">
 
             <div class="flex gap-4">
 
-                <img
-                    src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400"
-                    alt="Lapangan Futsal"
-                    class="w-28 h-28 rounded-xl object-cover flex-shrink-0"
-                >
+<img
+    src="{{ $nextBooking?->field?->photo_url ?? 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400' }}"
+    alt="Lapangan Futsal"
+    class="w-28 h-28 rounded-xl object-cover flex-shrink-0"
+>
 
                 <div class="flex-1">
 
@@ -119,8 +166,8 @@
 
                         </div>
 
-                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                            Dikonfirmasi
+                        <span class="px-3 py-1 rounded-full text-xs font-medium {{ $statusColor }}">
+                            {{ $statusText }}
                         </span>
 
                     </div>
@@ -138,6 +185,22 @@
                     </div>
 
                 </div>
+
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+
+    <p class="font-semibold text-yellow-800">
+        ⏰ Jadwal Terdekat
+    </p>
+
+    <p class="text-sm text-yellow-700 mt-1">
+        Main futsal pada
+        {{ $nextBooking->booking_date->translatedFormat('d F Y') }}
+        pukul
+        {{ \Carbon\Carbon::parse($nextBooking->start_time)->format('H:i') }}
+        WIB
+    </p>
+
+</div>
 
             @else
 
