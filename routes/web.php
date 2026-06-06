@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BookingHistoryController;
-use App\Models\Notification;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ReviewController;
-use App\Models\Booking;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,13 +16,6 @@ use App\Models\Booking;
 */
 Route::get('/', function () {
     return view('splash');
-});
-
-Route::get('/test-login', function () {
-    return [
-        'auth' => Auth::check(),
-        'user' => Auth::user(),
-    ];
 });
 
 /*
@@ -58,57 +51,57 @@ Route::middleware('auth')->group(function () {
         ->name('user.')
         ->group(function () {
 
-            Route::get('/beranda', fn() => view('user.beranda'))
-                ->name('beranda');
+            // Beranda
+            Route::get('/beranda', fn() => view('user.beranda'))->name('beranda');
 
             /*
-            | BOOKING
+            |------------------------------------------------------------------
+            | BOOKING – Pilih lapangan & jadwal
+            |------------------------------------------------------------------
             */
-            Route::get('/booking-history', [BookingHistoryController::class, 'index'])
-                ->name('booking.history');
+            Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
+            Route::get('/booking/slots', [BookingController::class, 'slots'])->name('booking.slots');
+            Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
 
-            Route::get('/booking-history/{booking}', [BookingHistoryController::class, 'show'])
-                ->name('booking.show');
+            /*
+            |------------------------------------------------------------------
+            | PAYMENT – Upload bukti & konfirmasi
+            |------------------------------------------------------------------
+            */
+            Route::get('/payment/{bookingId}', [PaymentController::class, 'show'])->name('payment.show');
+            Route::post('/payment/{bookingId}/upload', [PaymentController::class, 'upload'])->name('payment.upload');
+            Route::get('/payment/{bookingId}/success', [PaymentController::class, 'success'])->name('payment.success');
 
-            Route::get('/booking-history/{booking}/qr', [BookingHistoryController::class, 'qr'])
-                ->name('booking.qr');
+            /*
+            |------------------------------------------------------------------
+            | BOOKING HISTORY – Riwayat & detail
+            |------------------------------------------------------------------
+            */
+            Route::get('/booking-history', [BookingHistoryController::class, 'index'])->name('booking.history');
+            Route::get('/booking-history/{booking}', [BookingHistoryController::class, 'show'])->name('booking.show');
+            Route::get('/booking-history/{booking}/qr', [BookingHistoryController::class, 'qr'])->name('booking.qr');
+            Route::get('/booking-history/{booking}/cancel', [BookingHistoryController::class, 'cancelForm'])->name('booking.cancel.form');
+            Route::post('/booking-history/{booking}/cancel', [BookingHistoryController::class, 'cancel'])->name('booking.cancel');
+            Route::get('/booking-history/{booking}/cancel-success', [BookingHistoryController::class, 'cancelSuccess'])->name('booking.cancel.success');
 
-            Route::get('/booking-history/{booking}/cancel', [BookingHistoryController::class, 'cancelForm'])
-                ->name('booking.cancel.form');
+            /*
+            |------------------------------------------------------------------
+            | REVIEW
+            |------------------------------------------------------------------
+            */
+            Route::get('/booking-history/{booking}/review', [ReviewController::class, 'create'])->name('review.create');
+            Route::post('/booking-history/{booking}/review', [ReviewController::class, 'store'])->name('review.store');
 
-            Route::post('/booking-history/{booking}/cancel', [BookingHistoryController::class, 'cancel'])
-                ->name('booking.cancel');
+            /*
+            |------------------------------------------------------------------
+            | NOTIFIKASI
+            |------------------------------------------------------------------
+            */
+            Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.get');
+            Route::get('/notifications/{id}', [NotificationController::class, 'show'])->name('notifications.show');
+            Route::post('/notifications/read/{id}', [NotificationController::class, 'read'])->name('notifications.read');
+        });
 
-            Route::get('/booking-history/{booking}/cancel-success', [BookingHistoryController::class, 'cancelSuccess'])
-                ->name('booking.cancel.success');
-
-
-/*
-| 🔔 GET NOTIFICATIONS
-*/
-Route::get('/notifications', [NotificationController::class, 'getNotifications'])
-    ->name('notifications.get'); // ✅ TANPA 'user.'
-
-Route::get('/notifications/{id}', [NotificationController::class, 'show'])
-    ->name('notifications.show');
-
-/*
-| ✅ MARK AS READ
-*/
-Route::post('/notifications/read/{id}', [NotificationController::class, 'read'])
-    ->name('notifications.read');
-
-Route::get(
-    '/booking-history/{booking}/review',
-    [ReviewController::class, 'create']
-)->name('review.create');
-
-Route::post(
-    '/booking-history/{booking}/review',
-    [ReviewController::class, 'store']
-)->name('review.store');
-    
-});
     /*
     |--------------------------------------------------------------------------
     | ADMIN
@@ -119,13 +112,12 @@ Route::post(
         ->name('admin.')
         ->group(function () {
 
-            Route::get('/dashboard', fn() => view('admin.dashboard'))
-                ->name('dashboard');
+            Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
         });
 
     /*
     |--------------------------------------------------------------------------
-    | DEBUG
+    | DEBUG (hapus di production)
     |--------------------------------------------------------------------------
     */
     Route::get('/debug-login', function () {
