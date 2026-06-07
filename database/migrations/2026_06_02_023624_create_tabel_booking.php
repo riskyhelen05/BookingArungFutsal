@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('reservation_code', 20)->unique();
+            $table->string('reservation_code', 40)->unique();
             $table->foreignUuid('user_id')->constrained('users');
             $table->foreignUuid('field_id')->constrained('fields');
             $table->date('booking_date');

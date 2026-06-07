@@ -124,7 +124,7 @@ class BookingController extends Controller
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
 
-        return redirect()->route('payment.show', $booking->id);
+        return redirect()->route('user.payment.show', $booking->id);
     }
 
     /**

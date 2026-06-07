@@ -2,42 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Payment extends Model
 {
-    use HasFactory, HasUuids;
-
+    protected $table = 'payments';
     public $timestamps = false;
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     protected $fillable = [
-        'booking_id',
-        'proof_image_url',
-        'payment_status',
-        'amount',
-        'submitted_at',
-        'verified_at',
-        'verified_by',
-        'rejection_reason',
+        'id', 'booking_id', 'proof_image_url', 'payment_status',
+        'amount', 'submitted_at', 'verified_at', 'verified_by', 'rejection_reason',
     ];
 
-    protected function casts(): array
+    protected $casts = [
+        'submitted_at' => 'datetime',
+        'verified_at'  => 'datetime',
+    ];
+
+    protected static function boot()
     {
-        return [
-            'submitted_at' => 'datetime',
-            'verified_at'  => 'datetime',
-        ];
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid();
+            }
+        });
     }
 
     public function booking()
     {
         return $this->belongsTo(Booking::class, 'booking_id');
-    }
-
-    public function verifiedBy()
-    {
-        return $this->belongsTo(User::class, 'verified_by');
     }
 }

@@ -69,7 +69,7 @@ class PaymentController extends Controller
         // Update booking status
         $booking->update(['status' => 'waiting_confirmation']);
 
-        return redirect()->route('payment.success', $booking->id);
+        return redirect()->route('user.payment.success', $booking->id);
     }
 
     /**
