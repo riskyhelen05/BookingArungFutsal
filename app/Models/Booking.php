@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Models\Review;
+
 
 class Booking extends Model
 {
@@ -48,6 +50,11 @@ class Booking extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
+
+    public function review()
+{
+    return $this->hasOne(Review::class, 'booking_id');
+}
 
     public function getFormattedTotalAttribute(): string
     {
