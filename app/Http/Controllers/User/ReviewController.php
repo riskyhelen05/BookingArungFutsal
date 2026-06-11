@@ -44,9 +44,9 @@ public function store(Request $request, Booking $booking)
   Review::create([
     'user_id' => Auth::id(),
     'booking_id' => $booking->id,
-    'field_id' => $booking->field_id,
+    
     'rating' => $request->rating,
-    'review' => $request->comment,
+    'comment' => $request->comment,
 ]);
 
     return view('user.reviews.success');

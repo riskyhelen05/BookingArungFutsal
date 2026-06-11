@@ -12,9 +12,9 @@ class Review extends Model
     protected $fillable = [
     'booking_id',
     'user_id',
-    'field_id',
+   
     'rating',
-    'review',
+    'comment',
 ];
 
     public function user()
