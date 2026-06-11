@@ -9,7 +9,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\Admin\AdminBookingController;
-
+use App\Http\Controllers\Admin\ScannerController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -115,7 +115,9 @@ Route::middleware('auth')->group(function () {
         Route::patch('/booking/{booking}/reject', [AdminBookingController::class, 'reject'])->name('booking.reject');
 
         // Placeholder
-        Route::get('/scanner',  fn() => view('admin.soon'))->name('scanner');
+        Route::get('/scanner',                        [ScannerController::class, 'index'])->name('scanner');
+        Route::get('/scanner/scan/{code}',            [ScannerController::class, 'scan'])->name('scanner.scan');
+        Route::patch('/scanner/{booking}/checkin',    [ScannerController::class, 'checkIn'])->name('scanner.checkin');
         Route::get('/jadwal',   fn() => view('admin.soon'))->name('jadwal');
         Route::get('/lapangan', fn() => view('admin.soon'))->name('lapangan');
         Route::get('/laporan',  fn() => view('admin.soon'))->name('laporan');
