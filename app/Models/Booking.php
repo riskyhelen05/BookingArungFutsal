@@ -16,11 +16,12 @@ class Booking extends Model
     protected $fillable = [
         'id', 'reservation_code', 'user_id', 'field_id',
         'booking_date', 'start_time', 'end_time',
-        'duration_hours', 'price_per_hour', 'total_amount', 'status',
+        'duration_hours', 'price_per_hour', 'total_amount', 'status', 'checked_in_at',
     ];
 
     protected $casts = [
         'booking_date' => 'date',
+        'checked_in_at' => 'datetime',
     ];
 
     protected static function boot()
@@ -72,4 +73,6 @@ class Booking extends Model
             default                => ['label' => $this->status, 'class' => 'badge-ghost'],
         };
     }
+
+    
 }
