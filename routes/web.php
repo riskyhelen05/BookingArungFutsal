@@ -8,6 +8,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\Admin\AdminBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,13 +108,20 @@ Route::middleware('auth')->group(function () {
     | ADMIN
     |--------------------------------------------------------------------------
     */
-    Route::middleware('role:admin')
-        ->prefix('admin')
-        ->name('admin.')
-        ->group(function () {
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard',                  [AdminBookingController::class, 'index'])->name('dashboard');
+        Route::get('/booking/{booking}',          [AdminBookingController::class, 'show'])->name('booking.show');
+        Route::patch('/booking/{booking}/verify', [AdminBookingController::class, 'verify'])->name('booking.verify');
+        Route::patch('/booking/{booking}/reject', [AdminBookingController::class, 'reject'])->name('booking.reject');
 
-            Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
-        });
+        // Placeholder
+        Route::get('/scanner',  fn() => view('admin.soon'))->name('scanner');
+        Route::get('/jadwal',   fn() => view('admin.soon'))->name('jadwal');
+        Route::get('/lapangan', fn() => view('admin.soon'))->name('lapangan');
+        Route::get('/laporan',  fn() => view('admin.soon'))->name('laporan');
+        Route::get('/profile',  fn() => view('admin.soon'))->name('profile');
+    });
+        
 
     /*
     |--------------------------------------------------------------------------
