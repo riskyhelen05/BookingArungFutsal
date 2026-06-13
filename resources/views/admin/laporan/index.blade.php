@@ -14,13 +14,41 @@
             Rentang Waktu
         </h3>
 
-        <select class="w-full md:w-72 rounded-xl border-gray-300">
-            <option>Hari Ini</option>
-            <option>Kemarin</option>
-            <option>7 Hari Terakhir</option>
-            <option>30 Hari Terakhir</option>
-            <option>Bulan Ini</option>
-        </select>
+<form method="GET">
+
+    <select
+        name="period"
+        onchange="this.form.submit()"
+        class="w-full md:w-72 rounded-xl border-gray-300">
+
+        <option value="today"
+            {{ $period == 'today' ? 'selected' : '' }}>
+            Hari Ini
+        </option>
+
+        <option value="yesterday"
+            {{ $period == 'yesterday' ? 'selected' : '' }}>
+            Kemarin
+        </option>
+
+        <option value="last_7_days"
+            {{ $period == 'last_7_days' ? 'selected' : '' }}>
+            7 Hari Terakhir
+        </option>
+
+        <option value="last_30_days"
+            {{ $period == 'last_30_days' ? 'selected' : '' }}>
+            30 Hari Terakhir
+        </option>
+
+        <option value="this_month"
+            {{ $period == 'this_month' ? 'selected' : '' }}>
+            Bulan Ini
+        </option>
+
+    </select>
+
+</form>
 
     </div>
 
@@ -29,22 +57,22 @@
 
         <div class="bg-white rounded-2xl shadow-sm border p-6">
             <p class="text-sm text-gray-500">Total Booking</p>
-            <h2 class="text-3xl font-bold mt-2">0</h2>
+            <h2 class="text-3xl font-bold mt-2">{{ $totalBooking }}</h2>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border p-6">
             <p class="text-sm text-gray-500">Total Pendapatan</p>
-            <h2 class="text-3xl font-bold mt-2">Rp 0</h2>
+            <h2 class="text-3xl font-bold mt-2">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h2>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border p-6">
             <p class="text-sm text-gray-500">Slot Terisi</p>
-            <h2 class="text-3xl font-bold mt-2">0%</h2>
+            <h2 class="text-3xl font-bold mt-2">{{ $persentaseTerisi }}%</h2>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border p-6">
             <p class="text-sm text-gray-500">Slot Tersedia</p>
-            <h2 class="text-3xl font-bold mt-2">0%</h2>
+            <h2 class="text-3xl font-bold mt-2">{{ $persentaseTersedia }}%</h2>
         </div>
 
     </div>
