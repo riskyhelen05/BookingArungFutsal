@@ -166,6 +166,9 @@ Route::middleware('role:admin')
         Route::get('/laporan/export/pdf', [LaporanController::class, 'exportPdf'])
             ->name('laporan.export.pdf');
 
+        Route::get('/laporan/export/excel', [LaporanController::class, 'exportExcel'])
+            ->name('laporan.export.excel');
+
         Route::get('/profile', fn () => view('admin.soon'))
             ->name('profile');
     });
