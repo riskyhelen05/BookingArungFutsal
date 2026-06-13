@@ -85,7 +85,57 @@
         </h3>
 
         <div class="h-48 flex items-center justify-center text-gray-400">
-            Chart akan ditampilkan di sini
+            @if($fieldRevenue->count())
+
+    <div class="space-y-4">
+
+        @foreach($fieldRevenue as $item)
+
+            @php
+                $percentage = $totalPendapatan > 0
+                    ? round(($item->total / $totalPendapatan) * 100)
+                    : 0;
+            @endphp
+
+            <div>
+
+                <div class="flex justify-between mb-2">
+
+                    <span class="font-medium text-gray-700">
+                        {{ $item->field->name }}
+                    </span>
+
+                    <span class="text-sm text-gray-500">
+                        Rp {{ number_format($item->total, 0, ',', '.') }}
+                    </span>
+
+                </div>
+
+                <div class="w-full bg-gray-100 rounded-full h-3">
+
+                    <div
+                        class="bg-[#1ABC9C] h-3 rounded-full"
+                        style="width: {{ $percentage }}%">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        @endforeach
+
+    </div>
+
+@else
+
+    <div class="text-gray-400 text-center py-10">
+
+        Belum ada data pendapatan.
+
+    </div>
+
+@endif
         </div>
 
     </div>

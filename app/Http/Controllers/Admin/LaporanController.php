@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Field;
+use Illuminate\Support\Facades\DB;
 
 class LaporanController extends Controller
 {
@@ -63,15 +64,26 @@ public function index(Request $request)
 
     $persentaseTersedia = 100 - $persentaseTerisi;
 
+    $fieldRevenue = Booking::select(
+        'field_id',
+        DB::raw('SUM(total_amount) as total')
+    )
+    ->with('field')
+    ->whereIn('status', ['confirmed', 'completed'])
+    ->groupBy('field_id')
+    ->orderByDesc('total')
+    ->get();
+
     return view(
         'admin.laporan.index',
-        compact(
-            'period',
-            'totalBooking',
-            'totalPendapatan',
-            'persentaseTerisi',
-            'persentaseTersedia'
-        )
+compact(
+    'period',
+    'totalBooking',
+    'totalPendapatan',
+    'persentaseTerisi',
+    'persentaseTersedia',
+    'fieldRevenue'
+)
     );
 }
 }
