@@ -10,6 +10,8 @@ use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\ScannerController;
+use App\Http\Controllers\Admin\BlockedSlotController;
+//use App\Http\Controllers\LaporanController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -108,20 +110,57 @@ Route::middleware('auth')->group(function () {
     | ADMIN
     |--------------------------------------------------------------------------
     */
-    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard',                  [AdminBookingController::class, 'index'])->name('dashboard');
-        Route::get('/booking/{booking}',          [AdminBookingController::class, 'show'])->name('booking.show');
-        Route::patch('/booking/{booking}/verify', [AdminBookingController::class, 'verify'])->name('booking.verify');
-        Route::patch('/booking/{booking}/reject', [AdminBookingController::class, 'reject'])->name('booking.reject');
+Route::middleware('role:admin')
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-        // Placeholder
-        Route::get('/scanner',                        [ScannerController::class, 'index'])->name('scanner');
-        Route::get('/scanner/scan/{code}',            [ScannerController::class, 'scan'])->name('scanner.scan');
-        Route::patch('/scanner/{booking}/checkin',    [ScannerController::class, 'checkIn'])->name('scanner.checkin');
-        Route::get('/jadwal',   fn() => view('admin.soon'))->name('jadwal');
-        Route::get('/lapangan', fn() => view('admin.soon'))->name('lapangan');
-        Route::get('/laporan',  fn() => view('admin.soon'))->name('laporan');
-        Route::get('/profile',  fn() => view('admin.soon'))->name('profile');
+        Route::get('/dashboard', [AdminBookingController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/jadwal', [BlockedSlotController::class, 'index'])
+            ->name('jadwal');
+
+        Route::post('/blocked-slots/review', [BlockedSlotController::class, 'review'])
+            ->name('blocked.review');
+
+        Route::post('/blocked-slots/confirm', [BlockedSlotController::class, 'confirm'])
+            ->name('blocked.confirm');
+
+        Route::get('/blocked-slots/manage', [BlockedSlotController::class, 'manage'])
+            ->name('blocked.manage');
+
+        Route::delete('/blocked-slots/{id}', [BlockedSlotController::class, 'destroy'])
+            ->name('blocked.delete');
+
+        // booking
+        Route::get('/booking/{booking}', [AdminBookingController::class, 'show'])
+            ->name('booking.show');
+
+        Route::patch('/booking/{booking}/verify', [AdminBookingController::class, 'verify'])
+            ->name('booking.verify');
+
+        Route::patch('/booking/{booking}/reject', [AdminBookingController::class, 'reject'])
+            ->name('booking.reject');
+
+        // scanner
+        Route::get('/scanner', [ScannerController::class, 'index'])
+            ->name('scanner');
+
+        Route::get('/scanner/scan/{code}', [ScannerController::class, 'scan'])
+            ->name('scanner.scan');
+
+        Route::patch('/scanner/{booking}/checkin', [ScannerController::class, 'checkIn'])
+            ->name('scanner.checkin');
+
+        Route::get('/lapangan', fn () => view('admin.soon'))
+            ->name('lapangan');
+
+        Route::get('/laporan', fn () => view('admin.soon'))
+            ->name('laporan');
+
+        Route::get('/profile', fn () => view('admin.soon'))
+            ->name('profile');
     });
         
 
