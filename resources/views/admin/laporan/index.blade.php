@@ -160,7 +160,96 @@
 
         <div class="text-gray-400 text-center py-10">
 
-            Belum ada data booking.
+            @if($recentBookings->count())
+
+    <div class="overflow-x-auto">
+
+        <table class="w-full text-sm">
+
+            <thead>
+
+                <tr class="border-b text-left text-gray-500">
+
+                    <th class="py-3">Kode</th>
+                    <th class="py-3">Pelanggan</th>
+                    <th class="py-3">Lapangan</th>
+                    <th class="py-3">Tanggal</th>
+                    <th class="py-3">Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach($recentBookings as $booking)
+
+                    <tr class="border-b">
+
+                        <td class="py-4 font-medium">
+                            {{ $booking->reservation_code }}
+                        </td>
+
+                        <td class="py-4">
+                            {{ $booking->user->name }}
+                        </td>
+
+                        <td class="py-4">
+                            {{ $booking->field->name }}
+                        </td>
+
+                        <td class="py-4">
+                            {{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}
+                        </td>
+
+                        <td class="py-4">
+
+                            @php
+                                $badge = match($booking->status) {
+
+                                    'confirmed' => 'bg-green-100 text-green-700',
+
+                                    'completed' => 'bg-blue-100 text-blue-700',
+
+                                    'pending',
+                                    'waiting_confirmation'
+                                        => 'bg-yellow-100 text-yellow-700',
+
+                                    'cancelled'
+                                        => 'bg-red-100 text-red-700',
+
+                                    default
+                                        => 'bg-gray-100 text-gray-700',
+                                };
+                            @endphp
+
+                            <span class="px-2 py-1 rounded-full text-xs {{ $badge }}">
+
+                                {{ ucfirst(str_replace('_', ' ', $booking->status)) }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                @endforeach
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+@else
+
+    <div class="text-gray-400 text-center py-10">
+
+        Belum ada data booking.
+
+    </div>
+
+@endif
 
         </div>
 

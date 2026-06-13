@@ -74,6 +74,11 @@ public function index(Request $request)
     ->orderByDesc('total')
     ->get();
 
+    $recentBookings = Booking::with(['user', 'field'])
+    ->latest()
+    ->take(5)
+    ->get();
+
     return view(
         'admin.laporan.index',
 compact(
@@ -82,7 +87,8 @@ compact(
     'totalPendapatan',
     'persentaseTerisi',
     'persentaseTersedia',
-    'fieldRevenue'
+    'fieldRevenue',
+    'recentBookings'
 )
     );
 }
