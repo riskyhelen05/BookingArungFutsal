@@ -11,7 +11,7 @@ use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\ScannerController;
 use App\Http\Controllers\Admin\BlockedSlotController;
-//use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\Admin\LaporanController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -156,7 +156,8 @@ Route::middleware('role:admin')
         Route::get('/lapangan', fn () => view('admin.soon'))
             ->name('lapangan');
 
-        Route::get('/laporan', fn () => view('admin.soon'))
+        //Laporan
+        Route::get('/laporan', [LaporanController::class, 'index'])
             ->name('laporan');
 
         Route::get('/profile', fn () => view('admin.soon'))
