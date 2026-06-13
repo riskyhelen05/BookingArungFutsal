@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Field;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanController extends Controller
 {
@@ -53,7 +55,7 @@ public function index(Request $request)
     $totalPendapatan = (clone $query)
         ->whereIn('status', ['confirmed', 'completed'])
         ->sum('total_amount');
-
+    // TODO: hitung berdasarkan jumlah lapangan × jumlah slot × periode
     $totalSlot = 12;
 
     $slotTerisi = $totalBooking;
@@ -64,7 +66,8 @@ public function index(Request $request)
 
     $persentaseTersedia = 100 - $persentaseTerisi;
 
-    $fieldRevenue = Booking::select(
+$fieldRevenue = (clone $query)
+    ->select(
         'field_id',
         DB::raw('SUM(total_amount) as total')
     )
@@ -74,7 +77,8 @@ public function index(Request $request)
     ->orderByDesc('total')
     ->get();
 
-    $recentBookings = Booking::with(['user', 'field'])
+$recentBookings = (clone $query)
+    ->with(['user', 'field'])
     ->latest()
     ->take(5)
     ->get();
@@ -91,5 +95,67 @@ compact(
     'recentBookings'
 )
     );
+}
+public function exportCsv(Request $request)
+{
+    $bookings = Booking::with(['user', 'field'])
+        ->latest()
+        ->get();
+
+    $response = new StreamedResponse(function () use ($bookings) {
+
+        $handle = fopen('php://output', 'w');
+
+        fputcsv($handle, [
+            'Kode Reservasi',
+            'Pelanggan',
+            'Lapangan',
+            'Tanggal',
+            'Jam',
+            'Total',
+            'Status'
+        ]);
+
+        foreach ($bookings as $booking) {
+
+            fputcsv($handle, [
+                $booking->reservation_code,
+                $booking->user->name,
+                $booking->field->name,
+                $booking->booking_date,
+                substr($booking->start_time, 0, 5) . ' - ' .
+                substr($booking->end_time, 0, 5),
+                $booking->total_amount,
+                $booking->status,
+            ]);
+        }
+
+        fclose($handle);
+    });
+
+    $response->headers->set(
+        'Content-Type',
+        'text/csv'
+    );
+
+    $response->headers->set(
+        'Content-Disposition',
+        'attachment; filename="laporan-booking.csv"'
+    );
+
+    return $response;
+}
+public function exportPdf()
+{
+    $bookings = Booking::with(['user', 'field'])
+        ->latest()
+        ->get();
+
+    $pdf = Pdf::loadView(
+        'admin.laporan.pdf',
+        compact('bookings')
+    );
+
+    return $pdf->download('laporan-booking.pdf');
 }
 }

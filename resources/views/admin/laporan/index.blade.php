@@ -258,19 +258,21 @@
     {{-- EXPORT --}}
     <div class="flex justify-end gap-3">
 
-        <button
-            class="px-5 py-3 rounded-xl border border-red-200 text-red-600">
+<a
+    href="{{ route('admin.laporan.export.pdf') }}"
+    class="inline-flex items-center px-4 py-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-50">
 
-            Export PDF
+    Export PDF
 
-        </button>
+</a>
 
-        <button
-            class="px-5 py-3 rounded-xl border border-green-200 text-green-600">
+<a
+    href="{{ route('admin.laporan.export.csv') }}"
+    class="inline-flex items-center px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50">
 
-            Export CSV
+    Export CSV
 
-        </button>
+</a>
 
     </div>
 

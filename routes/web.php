@@ -160,6 +160,12 @@ Route::middleware('role:admin')
         Route::get('/laporan', [LaporanController::class, 'index'])
             ->name('laporan');
 
+        Route::get('/laporan/export/csv', [LaporanController::class, 'exportCsv'])
+            ->name('laporan.export.csv');
+
+        Route::get('/laporan/export/pdf', [LaporanController::class, 'exportPdf'])
+            ->name('laporan.export.pdf');
+
         Route::get('/profile', fn () => view('admin.soon'))
             ->name('profile');
     });
