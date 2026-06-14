@@ -11,7 +11,7 @@ use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\ScannerController;
 use App\Http\Controllers\ProfileController;
-//use App\Http\Controllers\Admin\FieldController;
+use App\Http\Controllers\Admin\FieldController;
 use App\Http\Controllers\Admin\BlockedSlotController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\User\UserDashboardController;
@@ -190,18 +190,18 @@ Route::middleware('auth')->group(function () {
             ->name('scanner.checkin');
 
         // Lapangan (CRUD dari branch kamu)
-        //Route::get('/lapangan', [FieldController::class, 'index'])
-            //->name('lapangan');
-        //Route::get('/lapangan/create', [FieldController::class, 'create'])
-            //->name('lapangan.create');
-        //Route::post('/lapangan', [FieldController::class, 'store'])
-            //->name('lapangan.store');
-        //Route::get('/lapangan/{lapangan}/edit', [FieldController::class, 'edit'])
-         //   ->name('lapangan.edit');
-        //Route::put('/lapangan/{lapangan}', [FieldController::class, 'update'])
-            //->name('lapangan.update');
-        //Route::delete('/lapangan/{lapangan}', [FieldController::class, 'destroy'])
-            //->name('lapangan.destroy');
+        Route::get('/lapangan', [FieldController::class, 'index'])
+            ->name('lapangan');
+        Route::get('/lapangan/create', [FieldController::class, 'create'])
+            ->name('lapangan.create');
+        Route::post('/lapangan', [FieldController::class, 'store'])
+            ->name('lapangan.store');
+        Route::get('/lapangan/{lapangan}/edit', [FieldController::class, 'edit'])
+            ->name('lapangan.edit');
+        Route::put('/lapangan/{lapangan}', [FieldController::class, 'update'])
+            ->name('lapangan.update');
+        Route::delete('/lapangan/{lapangan}', [FieldController::class, 'destroy'])
+            ->name('lapangan.destroy');
 
         // Laporan (dari main)
         Route::get('/laporan', [LaporanController::class, 'index'])
