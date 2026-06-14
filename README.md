@@ -1,58 +1,264 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ⚽ Arung Futsal Booking System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-12-red)
+![PHP](https://img.shields.io/badge/PHP-8%2B-blue)
+![MySQL](https://img.shields.io/badge/MySQL-Database-orange)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38BDF8)
+![Status](https://img.shields.io/badge/Status-Development-success)
 
-## About Laravel
+Sistem informasi pemesanan lapangan futsal berbasis web yang dikembangkan untuk membantu proses reservasi lapangan, pengelolaan jadwal, verifikasi pembayaran, serta monitoring aktivitas booking secara lebih efektif.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📌 Tentang Proyek
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Arung Futsal Booking System merupakan aplikasi berbasis web yang dirancang untuk mempermudah pelanggan dalam melakukan pemesanan lapangan futsal secara online serta membantu pihak pengelola dalam mengelola operasional lapangan secara lebih efektif.
 
-## Learning Laravel
+Sistem menyediakan fitur booking, pembayaran, QR check-in, notifikasi, ulasan pengguna, pengelolaan jadwal, blokir jadwal, hingga laporan statistik yang dapat diekspor ke berbagai format.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Teknologi yang Digunakan
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Backend
 
-## Agentic Development
+* Laravel
+* PHP
+* MySQL
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Frontend
+
+* Blade Template Engine
+* Tailwind CSS
+* JavaScript
+* Chart.js
+
+### Tools
+
+* Composer
+* Laravel Artisan
+* Git & GitHub
+* XAMPP / Laragon
+
+---
+
+# 👤 Fitur Pengguna
+
+### 🔐 Authentication
+
+* Splash Screen
+* Registrasi akun
+* Login pengguna
+* Logout
+
+### 🏠 Dashboard User
+
+* Informasi booking mendatang
+* Statistik booking pengguna
+* Pengingat jadwal bermain
+
+### 📅 Booking Lapangan
+
+* Pemilihan lapangan
+* Pemilihan tanggal dan jam bermain
+* Validasi slot tersedia
+* Preview booking
+* Upload bukti pembayaran
+
+### 📖 Riwayat Booking
+
+* Booking aktif
+* Riwayat booking selesai
+* Detail booking
+
+### 🎫 Tiket Digital
+
+* QR Code booking
+* Download tiket QR dalam format PNG
+
+### ❌ Pembatalan Booking
+
+* Form pembatalan booking
+* Halaman konfirmasi pembatalan
+
+### ⭐ Review Lapangan
+
+* Pemberian rating
+* Penulisan ulasan setelah bermain
+
+### 🔔 Notifikasi
+
+* Konfirmasi booking
+* Penolakan pembayaran
+* Pembatalan booking
+* Reminder jadwal bermain
+* Informasi check-in berhasil
+* Detail notifikasi
+
+### 👤 Profil
+
+---
+
+# 👨‍💼 Fitur Administrator
+
+### 📊 Dashboard Admin
+
+* Monitoring booking
+* Statistik status booking
+
+### 💳 Verifikasi Pembayaran
+
+* Konfirmasi pembayaran
+* Penolakan pembayaran beserta alasan
+
+### 📱 Scanner QR
+
+* Pemindaian QR booking
+* Validasi tiket
+* Konfirmasi kehadiran (check-in)
+
+### 🗓️ Kelola Jadwal
+
+* Tampilan slot lapangan
+* Integrasi status booking
+
+### 🚫 Blokir Jadwal
+
+* Pemilihan lapangan dan tanggal
+* Pemilihan slot blokir
+* Review blokir jadwal
+* Konfirmasi blokir jadwal
+* Statistik blokir
+* Pembatalan blokir jadwal
+
+### 📈 Modul Laporan
+
+* Filter berdasarkan periode
+* Total booking
+* Booking berhasil
+* Total pendapatan
+* Slot terisi
+* Slot tersedia
+* Grafik pendapatan
+* Grafik status booking
+* Tabel booking terbaru
+* Export PDF
+* Export Excel
+* Export CSV
+
+### ⚙️ Kelola Lapangan
+
+* Melakukan CRUD Kelola Lapangan
+
+### 👤 Profil Admin
+
+---
+
+# 🔒 Implementasi ACID Transaction
+
+Sistem menerapkan prinsip **ACID (Atomicity, Consistency, Isolation, Durability)** untuk menjaga integritas data pada proses penting.
+
+Implementasi dilakukan pada:
+
+* Pemesanan booking lapangan.
+* Verifikasi pembayaran.
+* Penolakan pembayaran.
+* Pembatalan booking oleh pengguna.
+* Check-in QR oleh administrator.
+
+---
+
+# 📋 Status Booking
+
+| Status               | Keterangan                          |
+| -------------------- | ----------------------------------- |
+| Pending              | Booking berhasil dibuat             |
+| Waiting Confirmation | Menunggu verifikasi pembayaran      |
+| Confirmed            | Booking telah dikonfirmasi          |
+| Cancelled            | Booking dibatalkan                  |
+| Completed            | Booking selesai / check-in berhasil |
+
+---
+
+# 🛠️ Instalasi
+
+Clone repository:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/riskyhelen05/BookingArungFutsal.git
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Masuk ke folder proyek:
 
-## Contributing
+```bash
+cd BookingArungFutsal
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install dependency:
 
-## Code of Conduct
+```bash
+composer install
+npm install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Salin file environment:
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Generate application key:
 
-## License
+```bash
+php artisan key:generate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Konfigurasi database pada file `.env`.
+
+Jalankan migrasi:
+
+```bash
+php artisan migrate
+```
+
+Jalankan server:
+
+```bash
+php artisan serve
+npm run dev
+```
+
+Akses aplikasi melalui:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+# 📚 Tujuan Pengembangan
+
+Sistem ini dikembangkan sebagai bagian dari proyek akademik untuk menerapkan konsep:
+
+* Pengembangan aplikasi web menggunakan Laravel.
+* Manajemen basis data relasional.
+* Implementasi transaksi ACID.
+* Penerapan autentikasi dan otorisasi pengguna.
+* Integrasi QR Code.
+* Visualisasi data dan pelaporan.
+
+---
+
+# 👥 Tim Pengembang Kelompok 13
+
+### Helen Risky Dwi Wahyuni (24082010054)
+
+### Andrey Parinding (24082010076)
+
+### Muhammad Yahya Zahid (24082010086)
+
+---
+
+# 📄 Lisensi
+
+Proyek ini dikembangkan untuk keperluan akademik dan pembelajaran.
