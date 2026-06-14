@@ -4,39 +4,6 @@
 
 @section('content')
 
-@php
-
-$nextBooking = \App\Models\Booking::where('user_id', Auth::id())
-    ->whereIn('status', [
-        'confirmed',
-        'pending',
-        'waiting_confirmation'
-    ])
-    ->with('field')
-    ->latest()
-    ->first();
-
-$statusColor = 'bg-gray-100 text-gray-700';
-$statusText = '-';
-
-if ($nextBooking) {
-    $statusColor = match($nextBooking->status) {
-        'confirmed' => 'bg-green-100 text-green-700',
-        'pending' => 'bg-yellow-100 text-yellow-700',
-        'waiting_confirmation' => 'bg-blue-100 text-blue-700',
-        default => 'bg-gray-100 text-gray-700'
-    };
-
-    $statusText = match($nextBooking->status) {
-        'confirmed' => 'Dikonfirmasi',
-        'pending' => 'Menunggu Pembayaran',
-        'waiting_confirmation' => 'Menunggu Konfirmasi',
-        default => ucfirst($nextBooking->status)
-    };
-}
-
-@endphp
-
 <div class="space-y-5">
 
     {{-- Header --}}
@@ -60,21 +27,21 @@ if ($nextBooking) {
     <div class="bg-white rounded-xl p-3 text-center">
         <p class="text-xs text-gray-500">Booking</p>
         <p class="text-xl font-bold text-[#12B5A5]">
-            {{ \App\Models\Booking::where('user_id', Auth::id())->count() }}
+            {{ $totalBooking }}
         </p>
     </div>
 
     <div class="bg-white rounded-xl p-3 text-center">
         <p class="text-xs text-gray-500">Aktif</p>
         <p class="text-xl font-bold text-green-600">
-            {{ \App\Models\Booking::where('user_id', Auth::id())->whereIn('status',['pending','confirmed'])->count() }}
+            {{ $activeBooking }}
         </p>
     </div>
 
     <div class="bg-white rounded-xl p-3 text-center">
         <p class="text-xs text-gray-500">Selesai</p>
         <p class="text-xl font-bold text-blue-600">
-            {{ \App\Models\Booking::where('user_id', Auth::id())->where('status','completed')->count() }}
+            {{ $completedBooking }}
         </p>
     </div>
 
