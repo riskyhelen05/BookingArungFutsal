@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Notification;
 
 class ScannerController extends Controller
 {
@@ -43,21 +45,40 @@ class ScannerController extends Controller
     }
 
     // Konfirmasi kehadiran
-    public function checkIn(Booking $booking)
-    {
+public function checkIn(Booking $booking)
+{
+    DB::transaction(function () use ($booking) {
+
         $booking->update([
             'checked_in_at' => now(),
             'status'        => 'completed',
         ]);
 
+        Notification::create([
+            'user_id'    => $booking->user_id,
+            'booking_id' => $booking->id,
+            'title'      => 'Check-In Berhasil',
+            'message'    => 'Kehadiran untuk booking '
+                . $booking->reservation_code
+                . ' berhasil dikonfirmasi.',
+            'type' => 'booking_success'
+        ]);
+
         ActivityLog::record(
             action: 'booking.checkin',
-            description: 'Admin mengkonfirmasi kehadiran booking ' . $booking->reservation_code,
+            description: 'Admin mengkonfirmasi kehadiran booking '
+                . $booking->reservation_code,
             subjectType: 'Booking',
             subjectId: $booking->id,
         );
 
-        return redirect()->route('admin.scanner')
-            ->with('success', 'Kehadiran ' . $booking->user->name . ' berhasil dikonfirmasi.');
-    }
+    });
+
+    return redirect()
+        ->route('admin.scanner')
+        ->with(
+            'success',
+            'Kehadiran ' . $booking->user->name . ' berhasil dikonfirmasi.'
+        );
+}
 }

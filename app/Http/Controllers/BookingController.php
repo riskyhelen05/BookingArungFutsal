@@ -126,27 +126,55 @@ class BookingController extends Controller
             return back()->withErrors(['error' => 'Jadwal diblokir admin']);
         }
 
-        DB::beginTransaction();
-        try {
+DB::beginTransaction();
 
-            $booking = Booking::create([
-                'user_id'       => Auth::id() ?? '00000000-0000-0000-0000-000000000001',
-                'field_id'      => $field->id,
-                'booking_date'  => $request->date,
-                'start_time'    => $start,
-                'end_time'      => $end,
-                'duration_hours'=> $duration,
-                'price_per_hour'=> $field->price_per_hour,
-                'total_amount'  => $field->price_per_hour * $duration,
-                'status'        => 'pending',
-            ]);
+try {
 
-            DB::commit();
+    $existingBooking = Booking::where('field_id', $field->id)
+        ->where('booking_date', $request->date)
+        ->whereIn('status', [
+            'pending',
+            'waiting_confirmation',
+            'confirmed'
+        ])
+        ->where(function ($query) use ($start, $end) {
+            $query->where('start_time', '<', $end)
+                  ->where('end_time', '>', $start);
+        })
+        ->lockForUpdate()
+        ->exists();
 
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
+    if ($existingBooking) {
+
+        DB::rollBack();
+
+        return back()->withErrors([
+            'error' => 'Slot sudah dibooking pengguna lain.'
+        ]);
+    }
+
+    $booking = Booking::create([
+        'user_id'       => Auth::id(),
+        'field_id'      => $field->id,
+        'booking_date'  => $request->date,
+        'start_time'    => $start,
+        'end_time'      => $end,
+        'duration_hours'=> $duration,
+        'price_per_hour'=> $field->price_per_hour,
+        'total_amount'  => $field->price_per_hour * $duration,
+        'status'        => 'pending',
+    ]);
+
+    DB::commit();
+
+} catch (\Throwable $e) {
+
+    DB::rollBack();
+
+    return back()->withErrors([
+        'error' => $e->getMessage()
+    ]);
+}
 
         return redirect()->route('user.payment.show', $booking->id);
     }
