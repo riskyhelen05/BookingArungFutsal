@@ -10,7 +10,6 @@ use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\ScannerController;
-use App\Http\Controllers\Admin\FieldController;
 use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
@@ -160,25 +159,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/scanner/scan/{code}',            [ScannerController::class, 'scan'])->name('scanner.scan');
         Route::patch('/scanner/{booking}/checkin',    [ScannerController::class, 'checkIn'])->name('scanner.checkin');
         Route::get('/jadwal',   fn() => view('admin.soon'))->name('jadwal');
-
-        Route::get('/lapangan', [FieldController::class, 'index'])
-            ->name('lapangan');
-
-        Route::get('/lapangan/create', [FieldController::class, 'create'])
-            ->name('lapangan.create');
-
-        Route::post('/lapangan', [FieldController::class, 'store'])
-            ->name('lapangan.store');
-
-        Route::get('/lapangan/{lapangan}/edit', [FieldController::class, 'edit'])
-            ->name('lapangan.edit');
-
-        Route::put('/lapangan/{lapangan}', [FieldController::class, 'update'])
-            ->name('lapangan.update');
-
-        Route::delete('/lapangan/{lapangan}', [FieldController::class, 'destroy'])
-            ->name('lapangan.destroy');
-
+        Route::get('/lapangan', fn() => view('admin.soon'))->name('lapangan');
         Route::get('/laporan',  fn() => view('admin.soon'))->name('laporan');
         Route::get('/profile',  fn() => view('admin.soon'))->name('profile');
     });
