@@ -51,27 +51,57 @@
             </a>
 
             {{-- Profil (belum ada route, pakai # dulu) --}}
-            <a href="#"
-               class="px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition-colors
-                      text-gray-400 cursor-not-allowed"
-               title="Segera hadir">
-                <span class="text-lg">👤</span> Profil
-                <span class="ml-auto text-xs bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded-md">Soon</span>
-            </a>
+            <a href="{{ route('user.profile') }}"
+    class="px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-medium transition-colors
+    {{ request()->routeIs('user.profile*')
+    ? 'bg-[#E6F7F5] text-[#12B5A5] font-semibold'
+    : 'text-gray-600 hover:bg-gray-100' }}">
+        <span class="text-lg">👤</span>
+        Profil
+</a>
 
         </nav>
 
         {{-- Logout --}}
         <div class="p-4 border-t border-gray-100">
-            <div class="flex items-center gap-3 mb-3 px-1">
-                <div class="w-9 h-9 rounded-full bg-[#12B5A5] text-white flex items-center justify-center font-bold text-sm shrink-0">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
-                <div class="min-w-0">
-                    <p class="text-sm font-semibold text-gray-800 truncate">{{ Auth::user()->name }}</p>
-                    <p class="text-xs text-gray-400 truncate">{{ Auth::user()->email }}</p>
-                </div>
+           <div class="flex items-center gap-3 mb-3 px-1">
+
+    {{-- Profile Photo --}}
+    <div class="w-10 h-10 rounded-full overflow-hidden
+                border-2 border-[#12B5A5]
+                bg-[#D9F4F1]
+                shrink-0">
+
+        @if(Auth::user()->avatar_url)
+
+            <img src="{{ asset('storage/' . Auth::user()->avatar_url) }}"
+                 alt="Profile"
+                 class="w-full h-full object-cover">
+
+        @else
+
+            <div class="w-full h-full flex items-center
+                        justify-center text-[#12B5A5]
+                        font-bold text-sm">
+                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
             </div>
+
+        @endif
+
+    </div>
+
+    {{-- User Info --}}
+    <div class="min-w-0">
+        <p class="text-sm font-semibold text-gray-800 truncate">
+            {{ Auth::user()->name }}
+        </p>
+
+        <p class="text-xs text-gray-400 truncate">
+             {{ '@' . Auth::user()->username }}
+        </p>
+    </div>
+
+</div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit"
@@ -123,12 +153,28 @@
                 </div>
 
                 {{-- Avatar --}}
-                <div class="w-9 h-9 rounded-full bg-[#12B5A5] text-white flex items-center
-                            justify-center font-bold text-sm shrink-0">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
+                <div class="w-9 h-9 rounded-full overflow-hidden
+            border-2 border-[#12B5A5]
+            bg-[#D9F4F1]
+            shrink-0">
 
-            </div>
+    @if(Auth::user()->avatar_url)
+
+        <img src="{{ asset('storage/' . Auth::user()->avatar_url) }}"
+             alt="Profile"
+             class="w-full h-full object-cover">
+
+    @else
+
+        <div class="w-full h-full flex items-center
+                    justify-center text-[#12B5A5]
+                    font-bold text-sm">
+            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+        </div>
+
+    @endif
+
+</div>
         </header>
 
         {{-- Flash messages --}}
