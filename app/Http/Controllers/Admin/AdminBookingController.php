@@ -7,6 +7,7 @@ use App\Models\ActivityLog;
 use App\Models\Booking;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class AdminBookingController extends Controller
@@ -53,8 +54,10 @@ class AdminBookingController extends Controller
     }
 
     // Verifikasi pembayaran → konfirmasi booking
-    public function verify(Booking $booking)
-    {
+public function verify(Booking $booking)
+{
+    DB::transaction(function () use ($booking) {
+
         // Update payment
         $booking->payment()->update([
             'payment_status' => 'verified',
@@ -62,40 +65,52 @@ class AdminBookingController extends Controller
             'verified_by'    => Auth::id(),
         ]);
 
-        // Update booking status
-        $booking->update(['status' => 'confirmed']);
+        // Update booking
+        $booking->update([
+            'status' => 'confirmed'
+        ]);
 
-        // Kirim notifikasi ke user
+        // Notifikasi
         Notification::create([
             'user_id'    => $booking->user_id,
             'booking_id' => $booking->id,
             'title'      => 'Booking Berhasil Dikonfirmasi!',
-            'message'    => 'Pembayaran kamu untuk ' . $booking->field->name .
-                            ' pada ' . $booking->booking_date->format('d M Y') .
-                            ' pukul ' . $booking->start_time . ' telah diverifikasi.',
+            'message'    => 'Pembayaran kamu untuk '
+                . $booking->field->name .
+                ' pada '
+                . $booking->booking_date->format('d M Y')
+                . ' pukul '
+                . $booking->start_time .
+                ' telah diverifikasi.',
             'type'       => 'booking_confirmed',
         ]);
 
-        // Activity log
+        // Activity Log
         ActivityLog::record(
             action: 'payment.verified',
-            description: 'Admin memverifikasi pembayaran booking ' . $booking->reservation_code,
+            description: 'Admin memverifikasi pembayaran booking '
+                . $booking->reservation_code,
             subjectType: 'Booking',
             subjectId: $booking->id,
         );
 
-        return redirect()->route('admin.booking.show', $booking)
-            ->with('success', 'Pembayaran berhasil diverifikasi.');
-    }
+    });
+
+    return redirect()
+        ->route('admin.booking.show', $booking)
+        ->with('success', 'Pembayaran berhasil diverifikasi.');
+}
 
     // Tolak pembayaran
-    public function reject(Request $request, Booking $booking)
-    {
-        $request->validate([
-            'rejection_reason' => 'required|string|max:255',
-        ], [
-            'rejection_reason.required' => 'Alasan penolakan wajib diisi.',
-        ]);
+public function reject(Request $request, Booking $booking)
+{
+    $request->validate([
+        'rejection_reason' => 'required|string|max:255',
+    ], [
+        'rejection_reason.required' => 'Alasan penolakan wajib diisi.',
+    ]);
+
+    DB::transaction(function () use ($booking, $request) {
 
         $booking->payment()->update([
             'payment_status'   => 'rejected',
@@ -104,25 +119,33 @@ class AdminBookingController extends Controller
             'rejection_reason' => $request->rejection_reason,
         ]);
 
-        $booking->update(['status' => 'cancelled']);
+        $booking->update([
+            'status' => 'cancelled'
+        ]);
 
         Notification::create([
             'user_id'    => $booking->user_id,
             'booking_id' => $booking->id,
             'title'      => 'Pembayaran Ditolak',
-            'message'    => 'Pembayaran booking ' . $booking->reservation_code .
-                            ' ditolak. Alasan: ' . $request->rejection_reason,
+            'message'    => 'Pembayaran booking '
+                . $booking->reservation_code
+                . ' ditolak. Alasan: '
+                . $request->rejection_reason,
             'type'       => 'payment_rejected',
         ]);
 
         ActivityLog::record(
             action: 'payment.rejected',
-            description: 'Admin menolak pembayaran booking ' . $booking->reservation_code,
+            description: 'Admin menolak pembayaran booking '
+                . $booking->reservation_code,
             subjectType: 'Booking',
             subjectId: $booking->id,
         );
 
-        return redirect()->route('admin.booking.show', $booking)
-            ->with('error', 'Pembayaran ditolak.');
-    }
+    });
+
+    return redirect()
+        ->route('admin.booking.show', $booking)
+        ->with('error', 'Pembayaran ditolak.');
+}
 }

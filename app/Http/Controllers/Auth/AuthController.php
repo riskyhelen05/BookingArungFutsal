@@ -103,10 +103,11 @@ return match($user->role) {
 
         // Catat activity log
         ActivityLog::record(
-            action: 'auth.register',
-            description: $user->name . ' berhasil mendaftar',
-            subjectType: 'User',
-            subjectId: $user->id,
+        action: 'auth.register',
+        description: $user->name . ' berhasil mendaftar',
+        subjectType: 'User',
+        subjectId: $user->id,
+        userId: $user->id // 🔥 WAJIB TAMBAH INI
         );
 
         Auth::login($user);

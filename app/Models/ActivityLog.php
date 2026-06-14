@@ -38,21 +38,22 @@ class ActivityLog extends Model
 
   
 
- public static function record(
-        string  $action,
-        string  $description,
-        ?string $subjectType = null,
-        ?string $subjectId   = null,
-    ): void {
-        self::create([
-            'user_id'      => Auth::id(),
-            'role'         => Auth::user()?->role,
-            'action'       => $action,
-            'description'  => $description,
-            'subject_type' => $subjectType,
-            'subject_id'   => $subjectId,
-            'ip_address'   => request()->ip(),
-            'user_agent'   => request()->userAgent(),
-        ]);
+public static function record(
+    string $action,
+    string $description,
+    string $subjectType = null,
+    string $subjectId = null,
+    string $userId = null
+) {
+    self::create([
+        'user_id' => $userId ?? auth()->id(),
+        'role' => auth()->user()->role ?? null,
+        'action' => $action,
+        'description' => $description,
+        'subject_type' => $subjectType,
+        'subject_id' => $subjectId,
+        'ip_address' => request()->ip(),
+        'user_agent' => request()->userAgent(),
+    ]);
 }
 }

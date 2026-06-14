@@ -29,10 +29,9 @@ class Field extends Model
     {
         return $this->hasMany(Booking::class, 'field_id');
     }
-
-    public function scheduleBlocks()
+    public function blockedSlots()
     {
-        return $this->hasMany(ScheduleBlock::class, 'field_id');
+    return $this->hasMany(BlockedSlot::class, 'field_id');
     }
 
     /**
@@ -45,7 +44,7 @@ class Field extends Model
         $end   = sprintf('%02d:00:00', $hour + 1);
 
         // Check schedule blocks
-        $blocked = ScheduleBlock::where('field_id', $this->id)
+        $blocked = BlockedSlot::where('field_id', $this->id)
             ->where('block_date', $date)
             ->where('start_time', '<', $end)
             ->where('end_time', '>', $start)
