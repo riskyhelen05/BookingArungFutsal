@@ -10,6 +10,8 @@ use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\ScannerController;
+use App\Http\Controllers\Admin\FieldController;
+use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -86,6 +88,45 @@ Route::middleware('auth')->group(function () {
             Route::get('/booking-history/{booking}/cancel-success', [BookingHistoryController::class, 'cancelSuccess'])->name('booking.cancel.success');
 
             /*
+            |--------------------------------------------------------------------------
+            | PROFILE
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get('/profile', [ProfileController::class, 'index'])
+                ->name('profile');
+
+            Route::get('/profile/edit', [ProfileController::class, 'edit'])
+                ->name('profile.edit');
+
+            Route::put('/profile/update', [ProfileController::class, 'update'])
+                ->name('profile.update');
+
+            Route::get('/profile/username', [ProfileController::class, 'username'])
+                ->name('profile.username');
+
+            Route::put('/profile/username', [ProfileController::class, 'updateUsername'])
+                ->name('profile.username.update');
+
+            Route::get('/profile/password', [ProfileController::class, 'password'])
+                ->name('profile.password');
+
+            Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+                ->name('profile.password.update');
+
+            Route::get('/profile/maps', [ProfileController::class, 'maps'])
+                ->name('profile.maps');    
+
+            Route::get('/profile/privacy', [ProfileController::class, 'privacy'])
+                ->name('profile.privacy');
+
+            Route::get('/profile/terms', [ProfileController::class, 'terms'])
+                ->name('profile.terms');
+
+            Route::get('/profile/support', [ProfileController::class, 'support'])
+                ->name('profile.support');
+
+            /*
             |------------------------------------------------------------------
             | REVIEW
             |------------------------------------------------------------------
@@ -119,7 +160,25 @@ Route::middleware('auth')->group(function () {
         Route::get('/scanner/scan/{code}',            [ScannerController::class, 'scan'])->name('scanner.scan');
         Route::patch('/scanner/{booking}/checkin',    [ScannerController::class, 'checkIn'])->name('scanner.checkin');
         Route::get('/jadwal',   fn() => view('admin.soon'))->name('jadwal');
-        Route::get('/lapangan', fn() => view('admin.soon'))->name('lapangan');
+
+        Route::get('/lapangan', [FieldController::class, 'index'])
+            ->name('lapangan');
+
+        Route::get('/lapangan/create', [FieldController::class, 'create'])
+            ->name('lapangan.create');
+
+        Route::post('/lapangan', [FieldController::class, 'store'])
+            ->name('lapangan.store');
+
+        Route::get('/lapangan/{lapangan}/edit', [FieldController::class, 'edit'])
+            ->name('lapangan.edit');
+
+        Route::put('/lapangan/{lapangan}', [FieldController::class, 'update'])
+            ->name('lapangan.update');
+
+        Route::delete('/lapangan/{lapangan}', [FieldController::class, 'destroy'])
+            ->name('lapangan.destroy');
+
         Route::get('/laporan',  fn() => view('admin.soon'))->name('laporan');
         Route::get('/profile',  fn() => view('admin.soon'))->name('profile');
     });
