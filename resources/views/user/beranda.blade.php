@@ -111,7 +111,7 @@ if ($nextBooking) {
                     </p>
 
                     <a
-                        href="#"
+                        href="{{ route('user.booking.index') }}"
                         class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-[#12B5A5] text-white text-sm font-medium hover:bg-[#0fa293] transition"
                     >
                         Booking Sekarang

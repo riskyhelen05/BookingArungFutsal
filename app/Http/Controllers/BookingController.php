@@ -17,6 +17,7 @@ class BookingController extends Controller
 
         $selectedDate = $request->get('date', now()->format('Y-m-d'));
         $selectedFieldId = $request->get('field_id', optional($fields->first())->id);
+        $selectedDuration = (int) $request->get('duration', 1);
 
         $selectedField = $fields->firstWhere('id', $selectedFieldId) ?? $fields->first();
 
@@ -49,7 +50,7 @@ class BookingController extends Controller
         }
 
         return view('booking.index', compact(
-            'fields', 'selectedField', 'selectedDate', 'schedule'
+            'fields', 'selectedField', 'selectedDate', 'selectedDuration', 'schedule'
         ));
     }
 
