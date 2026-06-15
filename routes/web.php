@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\FieldController;
 use App\Http\Controllers\Admin\BlockedSlotController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\User\UserDashboardController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -58,7 +59,8 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
 
             // Beranda
-            Route::get('/beranda', fn() => view('user.beranda'))->name('beranda');
+            Route::get('/beranda', [UserDashboardController::class, 'index'])
+                ->name('beranda');
 
             /*
             |------------------------------------------------------------------
