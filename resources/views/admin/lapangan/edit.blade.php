@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Lapangan')
-@section('page-title', 'Tambah Lapangan')
+@section('title', 'Edit Lapangan')
+@section('page-title', 'Edit Lapangan')
 
 @section('content')
 
@@ -9,8 +9,8 @@
 
     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
 
-        {{-- FORM CREATE --}}
-        <form action="{{ route('admin.lapangan.store') }}"
+        {{-- FORM EDIT --}}
+        <form action="{{ route('admin.lapangan.update', $field->id) }}"
               method="POST"
               enctype="multipart/form-data">
 
@@ -24,4 +24,3 @@
 </div>
 
 @endsection
-
