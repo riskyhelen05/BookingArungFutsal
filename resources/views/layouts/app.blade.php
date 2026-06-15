@@ -103,20 +103,6 @@
                 <span class="font-extrabold text-xl text-brand-700 tracking-tight">ArungFutsal</span>
             </a>
 
-            <!-- Nav links -->
-            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-                <a href="{{ route('user.beranda') }}" class="hover:text-brand-600 transition-colors">Beranda</a>
-                <a href="{{ route('user.booking.index') }}" class="hover:text-brand-600 transition-colors">Booking</a>
-                <a href="{{ route('user.booking.history') }}" class="hover:text-brand-600 transition-colors">Booking Saya</a>
-            </nav>
-
-            <!-- Right actions -->
-            <div class="flex items-center gap-3">
-                <a href="{{ route('user.booking.index') }}"
-                   class="hidden sm:inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    Booking Sekarang
-                </a>
 
                 <!-- Mobile menu toggle -->
                 <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-brand-50 transition-colors">

@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\FieldController;
 use App\Http\Controllers\Admin\BlockedSlotController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\AdminProfileController;
 /*
 |--------------------------------------------------------------------------
 | PUBLIC
@@ -151,7 +152,7 @@ Route::middleware('auth')->group(function () {
     | ADMIN
     |--------------------------------------------------------------------------
     */
-    RRoute::middleware('role:admin')
+    Route::middleware('role:admin')
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -187,19 +188,34 @@ Route::middleware('auth')->group(function () {
         Route::patch('/scanner/{booking}/checkin', [ScannerController::class, 'checkIn'])
             ->name('scanner.checkin');
 
-        // Lapangan (CRUD dari branch kamu)
-        Route::get('/lapangan', [FieldController::class, 'index'])
-            ->name('lapangan');
-        Route::get('/lapangan/create', [FieldController::class, 'create'])
-            ->name('lapangan.create');
-        Route::post('/lapangan', [FieldController::class, 'store'])
-            ->name('lapangan.store');
-        Route::get('/lapangan/{lapangan}/edit', [FieldController::class, 'edit'])
-            ->name('lapangan.edit');
-        Route::put('/lapangan/{lapangan}', [FieldController::class, 'update'])
-            ->name('lapangan.update');
-        Route::delete('/lapangan/{lapangan}', [FieldController::class, 'destroy'])
-            ->name('lapangan.destroy');
+        
+    // Lapangan
+    Route::prefix('lapangan')->name('lapangan.')->group(function () {
+
+    Route::get('/', [FieldController::class, 'index'])
+        ->name('index');
+
+    Route::get('/create', [FieldController::class, 'create'])
+        ->name('create');
+
+    Route::post('/', [FieldController::class, 'store'])
+        ->name('store');
+
+    Route::get('/{lapangan}', [FieldController::class, 'show'])
+        ->name('show');
+
+    Route::get('/{lapangan}/edit', [FieldController::class, 'edit'])
+        ->name('edit');
+
+    Route::put('/{lapangan}', [FieldController::class, 'update'])
+        ->name('update');
+
+    Route::delete('/{lapangan}', [FieldController::class, 'destroy'])
+        ->name('destroy');
+
+    });
+
+
 
         // Laporan (dari main)
         Route::get('/laporan', [LaporanController::class, 'index'])
@@ -211,8 +227,33 @@ Route::middleware('auth')->group(function () {
         Route::get('/laporan/export/excel', [LaporanController::class, 'exportExcel'])
             ->name('laporan.export.excel');
 
-        Route::get('/profile', fn () => view('admin.soon'))
-            ->name('profile');
+        Route::get('/profile', [AdminProfileController::class, 'index'])
+             ->name('profile');
+             
+        Route::get('/profile/account', [AdminProfileController::class, 'account'])
+            ->name('profile.account');
+
+          Route::post('/profile/account', [AdminProfileController::class, 'confirmAccount'])
+            ->name('profile.account.confirm');
+
+        Route::get('/profile/password', [AdminProfileController::class, 'password'])
+            ->name('profile.password');
+
+        Route::post('/profile/password', [AdminProfileController::class, 'updatePassword'])
+            ->name('profile.password.update');  
+
+        Route::get('/profile/location', [AdminProfileController::class, 'location'])
+            ->name('profile.location');
+
+        Route::post('/profile/location', [AdminProfileController::class, 'updateLocation'])
+            ->name('profile.location.update');
+
+        Route::get('/profile/payment', [AdminProfileController::class, 'payment'])
+            ->name('profile.payment');
+
+        Route::post('/profile/payment', [AdminProfileController::class, 'updatePayment'])
+            ->name('profile.payment.update');
+
     });
         
 
